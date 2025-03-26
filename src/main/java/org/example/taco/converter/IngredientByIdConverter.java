@@ -9,7 +9,7 @@ import java.util.Map;
 
 @Component
 public class IngredientByIdConverter implements Converter<String, Ingredient> {
-    private Map<String, Ingredient> ingredientMap = new HashMap<>();
+    private final Map<String, Ingredient> ingredientMap = new HashMap<>();
 
     public IngredientByIdConverter() {
         ingredientMap.put("FLTO", new Ingredient("FLTO", "Flour Tortilla", Ingredient.Type.WRAP));
