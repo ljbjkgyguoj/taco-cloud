@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
-public class TacoOrder {
+public class TacoOrderDto {
 
     @NotBlank(message = "Необходимо указать имя получателя")
     private String deliveryName;
@@ -35,9 +35,9 @@ public class TacoOrder {
     @Digits(integer = 3, fraction = 0, message = "Неверный cvv номер")
     private String ccCVV;
 
-    private List<Taco> tacos = new ArrayList<>();
+    private List<TacoDto> tacos = new ArrayList<>();
 
-    public void addTaco(Taco taco) {
+    public void addTaco(TacoDto taco) {
         this.tacos.add(taco);
     }
 }

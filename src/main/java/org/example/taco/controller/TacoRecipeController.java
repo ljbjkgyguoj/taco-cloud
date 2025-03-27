@@ -2,15 +2,18 @@ package org.example.taco.controller;
 
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
-import org.example.taco.dto.Ingredient;
-import org.example.taco.dto.Taco;
-import org.example.taco.dto.TacoOrder;
+import org.example.taco.converter.IngredientConverter;
+import org.example.taco.dto.IngredientDto;
+import org.example.taco.dto.IngredientType;
+import org.example.taco.dto.TacoDto;
+import org.example.taco.dto.TacoOrderDto;
+import org.example.taco.entity.Ingredient;
+import org.example.taco.repository.IngredientRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,36 +23,29 @@ import java.util.stream.Collectors;
 @SessionAttributes("tacoOrder")
 public class TacoRecipeController {
 
+    private IngredientRepository ingredientRepository;
+
+    private IngredientConverter ingredientConverter;
+
     @ModelAttribute
     public void addIngredientsToModel(Model model) {
-        List<Ingredient> ingredients = Arrays.asList(
-                new Ingredient("FLTO", "Пшеничная тортилья", Ingredient.Type.WRAP),
-                new Ingredient("COTO", "Кукурузная тортилья", Ingredient.Type.WRAP),
-                new Ingredient("GRBF", "Говядина", Ingredient.Type.PROTEIN),
-                new Ingredient("CHIK", "Курица", Ingredient.Type.PROTEIN),
-                new Ingredient("TMTO", "Томат", Ingredient.Type.VEGGIES),
-                new Ingredient("LETC", "Листья салата", Ingredient.Type.VEGGIES),
-                new Ingredient("CHOR", "Кукуруза", Ingredient.Type.VEGGIES),
-                new Ingredient("CHED", "Чеддер", Ingredient.Type.CHEESE),
-                new Ingredient("JACK", "Монтерей Джек", Ingredient.Type.CHEESE),
-                new Ingredient("SLSA", "Сальса", Ingredient.Type.SAUCE),
-                new Ingredient("SRCR", "Сметанный соус", Ingredient.Type.SAUCE)
-        );
-        Ingredient.Type[] types = Ingredient.Type.values();
-        for (Ingredient.Type type : types) {
+        List<Ingredient> ingredients = ingredientRepository.findAll();
+        List<IngredientDto> ingredientDtos = ingredientConverter.toDtoList(ingredients);
+
+        for (IngredientType type : IngredientType.values()) {
             model.addAttribute(type.toString().toLowerCase(),
-                    filterByType(ingredients, type));
+                    filterByType(ingredientDtos, type));
         }
     }
 
     @ModelAttribute(name = "tacoOrder")
-    public TacoOrder order() {
-        return new TacoOrder();
+    public TacoOrderDto order() {
+        return new TacoOrderDto();
     }
 
     @ModelAttribute(name = "taco")
-    public Taco taco() {
-        return new Taco();
+    public TacoDto taco() {
+        return new TacoDto();
     }
 
     @GetMapping
@@ -57,8 +53,8 @@ public class TacoRecipeController {
         return "recipe";
     }
 
-    private Iterable<Ingredient> filterByType(
-            List<Ingredient> ingredients, Ingredient.Type type) {
+    private Iterable<IngredientDto> filterByType(
+            List<IngredientDto> ingredients, IngredientType type) {
         return ingredients
                 .stream()
                 .filter(x -> x.getType().equals(type))
@@ -66,8 +62,8 @@ public class TacoRecipeController {
     }
 
     @PostMapping
-    public String processTaco(@Valid Taco taco, Errors errors,
-                              @ModelAttribute TacoOrder tacoOrder) {
+    public String processTaco(@Valid TacoDto taco, Errors errors,
+                              @ModelAttribute TacoOrderDto tacoOrder) {
         if (errors.hasErrors()) {
             return "recipe";
         }

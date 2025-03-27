@@ -7,12 +7,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class Ingredient {
+public class IngredientDto {
     private String id;
     private String name;
-    private Type type;
-
-    public enum Type {
-        WRAP, PROTEIN, VEGGIES, CHEESE, SAUCE
-    }
+    private IngredientType type;
 }

@@ -7,7 +7,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class Taco {
+public class TacoDto {
 
     @NotNull
     @Size(min = 1, message = "Укажите наименование")
@@ -15,5 +15,5 @@ public class Taco {
 
     @NotNull
     @Size(min = 1, message = "Необходимо выбрать хотя бы 1 ингредиент")
-    private List<Ingredient> ingredients;
+    private List<IngredientDto> ingredients;
 }
