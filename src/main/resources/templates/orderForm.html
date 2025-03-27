@@ -2,46 +2,75 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Taco Cloud</title>
+    <title>Такерия</title>
     <link rel="stylesheet" th:href="@{/styles.css}"/>
+    <style>
+        .validationError {
+            color: red;
+            font-size: 14px;
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
 <form method="POST" th:action="@{/orders}" th:object="${tacoOrder}">
-    <h1>Order your taco creations!</h1>
+    <h1>Оформите заказ!</h1>
     <img th:src="@{/images/Taco.png}"/>
-    <h3>Your tacos in this order:</h3>
-    <a th:href="@{/recipe}" id="another">Design another taco</a><br/>
-    <ul>
+    <a th:href="@{/recipe}" id="another">Создать новый тако</a><br/>
+    <h3>Вы добавили следующие тако:</h3>
+    <ul th:if="${tacoOrder.tacos != null and !tacoOrder.tacos.isEmpty()}">
         <li th:each="taco : ${tacoOrder.tacos}">
-            <span th:text="${taco.name}">taco name</span></li>
+            <span th:text="${taco.name}">taco name</span>
+        </li>
     </ul>
-    <h3>Deliver my taco masterpieces to...</h3>
-    <label for="deliveryName">Name: </label>
+    <h3>Адрес доставки:</h3>
+    <label for="deliveryName">Имя получателя: </label>
     <input type="text" th:field="*{deliveryName}" id="deliveryName"/>
+    <span class="validationError"
+          th:if="${#fields.hasErrors('deliveryName')}"
+          th:errors="*{deliveryName}">Необходимо указать имя получателя</span>
     <br/>
-    <label for="deliveryStreet">Street address: </label>
+    <label for="deliveryStreet">Улица: </label>
     <input type="text" th:field="*{deliveryStreet}" id="deliveryStreet"/>
+    <span class="validationError"
+          th:if="${#fields.hasErrors('deliveryStreet')}"
+          th:errors="*{deliveryStreet}">Необходимо указать адрес доставки</span>
     <br/>
-    <label for="deliveryCity">City: </label>
+    <label for="deliveryCity">Город: </label>
     <input type="text" th:field="*{deliveryCity}" id="deliveryCity"/>
+    <span class="validationError"
+          th:if="${#fields.hasErrors('deliveryCity')}"
+          th:errors="*{deliveryCity}">Необходимо указать город доставки</span>
     <br/>
-    <label for="deliveryState">State: </label>
+    <label for="deliveryState">Регион: </label>
     <input type="text" th:field="*{deliveryState}" id="deliveryState"/>
+    <span class="validationError"
+          th:if="${#fields.hasErrors('deliveryState')}"
+          th:errors="*{deliveryState}">Необходимо указать регион доставки</span>
     <br/>
-    <label for="deliveryZip">Zip code: </label>
+    <label for="deliveryZip">Zip код: </label>
     <input type="text" th:field="*{deliveryZip}" id="deliveryZip"/>
     <br/>
-    <h3>Here’s how I’ll pay...</h3>
-    <label for="ccNumber">Credit Card #: </label>
+    <h3>Карта оплаты:</h3>
+    <label for="ccNumber">Номер карты: </label>
     <input type="text" th:field="*{ccNumber}" id="ccNumber"/>
+    <span class="validationError"
+          th:if="${#fields.hasErrors('ccNumber')}"
+          th:errors="*{ccNumber}">Данный номер не существует</span>
     <br/>
-    <label for="ccExpiration">Expiration: </label>
+    <label for="ccExpiration">Дата окончания действия: </label>
     <input type="text" th:field="*{ccExpiration}" id="ccExpiration"/>
+    <span class="validationError"
+          th:if="${#fields.hasErrors('ccExpiration')}"
+          th:errors="*{ccExpiration}">Необходимо указать дату в формате мм/гг</span>
     <br/>
-    <label for="ccCVV">CVV: </label>
+    <label for="ccCVV">CVV код: </label>
     <input type="text" th:field="*{ccCVV}" id="ccCVV"/>
+    <span class="validationError"
+          th:if="${#fields.hasErrors('ccCVV')}"
+          th:errors="*{ccCVV}">Неверный cvv номер</span>
     <br/>
-    <input type="submit" value="Submit Order"/>
+    <input type="submit" value="Подтвердить заказ"/>
 </form>
 </body>
 </html>
