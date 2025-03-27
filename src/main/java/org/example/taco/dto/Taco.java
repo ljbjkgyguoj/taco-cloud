@@ -10,7 +10,7 @@ import java.util.List;
 public class Taco {
 
     @NotNull
-    @Size(message = "Укажите наименование")
+    @Size(min = 1, message = "Укажите наименование")
     private String name;
 
     @NotNull
